@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的订单</title>
+    <link rel="stylesheet" href="/shop/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🛒 我的商城</div>
+        <div class="nav-links">
+            <a href="/shop">首页</a>
+            <a href="/shop/orders.html" class="active">我的订单</a>
+            <a href="/shop/wallet.html">我的钱包</a>
+            <a href="/shop/profile.html">个人中心</a>
+        </div>
+        <div class="nav-user" id="navUser">
+            <span id="userName">未登录</span>
+            <a href="/shop/login.html" id="loginBtn">登录</a>
+            <a href="javascript:void(0)" id="logoutBtn" style="display:none" onclick="logout()">退出</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>我的订单</h1>
+        </div>
+
+        <div class="order-tabs">
+            <button class="tab-btn active" onclick="filterOrders('')">全部</button>
+            <button class="tab-btn" onclick="filterOrders('pending')">待支付</button>
+            <button class="tab-btn" onclick="filterOrders('paid')">待发货</button>
+            <button class="tab-btn" onclick="filterOrders('shipped')">待收货</button>
+            <button class="tab-btn" onclick="filterOrders('completed')">已完成</button>
+        </div>
+
+        <div class="orders-list" id="ordersList">
+            <div class="loading">加载中...</div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <div id="orderDetailModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="closeOrderDetailModal()">&times;</span>
+            <h3>订单详情</h3>
+            <div id="orderDetailContent"></div>
+        </div>
+    </div>
+
+    <script src="/shop/js/api.js"></script>
+    <script src="/shop/js/utils.js"></script>
+    <script src="/shop/js/auth.js"></script>
+    <script src="/shop/js/shop.js"></script>
+    <script>
+        checkAuth(true);
+        loadOrders();
+    </script>
+</body>
+</html>

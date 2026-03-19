@@ -1,0 +1,45 @@
+# Binaries
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Config (keep template)
+config.yaml
+
+# Uploads (for development)
+# uploads/
+
+# Frontend
+web/node_modules/
+web/dist/
+
+# Temp files
+tmp/
+*.tmp

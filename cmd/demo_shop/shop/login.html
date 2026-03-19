@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员登录</title>
+    <link rel="stylesheet" href="/shop/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🛒 我的商城</div>
+        <div class="nav-links">
+            <a href="/shop">首页</a>
+        </div>
+    </nav>
+
+    <main class="container auth-container">
+        <div class="auth-box">
+            <h2>会员登录</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="identity">邮箱/手机号</label>
+                    <input type="text" id="identity" name="identity" required placeholder="请输入邮箱或手机号">
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" required placeholder="请输入密码">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">登录</button>
+                </div>
+                <div class="form-links">
+                    <a href="/shop/register.html">注册账号</a>
+                    <a href="/shop/forgot-password.html">忘记密码？</a>
+                </div>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </main>
+
+    <script src="/shop/js/api.js"></script>
+    <script src="/shop/js/utils.js"></script>
+    <script src="/shop/js/auth.js"></script>
+    <script>
+        // 如果已登录，显示提示
+        if (localStorage.getItem('token')) {
+            const user = getLocalUser();
+            document.querySelector('.auth-box').innerHTML = `
+                <h2>已登录</h2>
+                <p style="text-align: center; margin: 20px 0;">
+                    当前用户: ${user ? (user.nickname || user.email || '用户') : '未知'}
+                </p>
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="logout()">退出登录</button>
+                    <a href="/shop" class="btn-secondary" style="display: inline-block; text-align: center; margin-top: 10px;">返回首页</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

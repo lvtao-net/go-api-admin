@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="/shop/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🛒 我的商城</div>
+        <div class="nav-links">
+            <a href="/shop">首页</a>
+            <a href="/shop/orders.html">我的订单</a>
+            <a href="/shop/wallet.html">我的钱包</a>
+            <a href="/shop/profile.html" class="active">个人中心</a>
+        </div>
+        <div class="nav-user" id="navUser">
+            <span id="userName">未登录</span>
+            <a href="/shop/login.html" id="loginBtn">登录</a>
+            <a href="javascript:void(0)" id="logoutBtn" style="display:none" onclick="logout()">退出</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="avatar" id="userAvatar">👤</div>
+                <div class="profile-info">
+                    <h2 id="profileNickname">加载中...</h2>
+                    <p id="profileEmail"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-sections">
+            <div class="profile-section">
+                <h3>基本信息</h3>
+                <form id="profileForm" onsubmit="updateProfile(event)">
+                    <div class="form-group">
+                        <label for="nickname">昵称</label>
+                        <input type="text" id="nickname" name="nickname" placeholder="请输入昵称">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">手机号</label>
+                        <input type="tel" id="phone" name="phone" placeholder="请输入手机号">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">默认收货地址</label>
+                        <textarea id="address" name="address" rows="2" placeholder="请输入默认收货地址"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">保存修改</button>
+                </form>
+            </div>
+
+            <div class="profile-section">
+                <h3>修改密码</h3>
+                <form id="passwordForm" onsubmit="changePassword(event)">
+                    <div class="form-group">
+                        <label for="oldPassword">当前密码</label>
+                        <input type="password" id="oldPassword" name="oldPassword" required placeholder="请输入当前密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密码</label>
+                        <input type="password" id="newPassword" name="newPassword" required placeholder="请输入新密码（至少6位）">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword">确认新密码</label>
+                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" required placeholder="请再次输入新密码">
+                    </div>
+                    <button type="submit" class="btn-primary">修改密码</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="message" class="message"></div>
+    </main>
+
+    <script src="/shop/js/api.js"></script>
+    <script src="/shop/js/utils.js"></script>
+    <script src="/shop/js/auth.js"></script>
+    <script src="/shop/js/shop.js"></script>
+    <script>
+        checkAuth(true);
+        loadProfile();
+    </script>
+</body>
+</html>

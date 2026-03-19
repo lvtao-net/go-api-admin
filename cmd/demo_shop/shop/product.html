@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情</title>
+    <link rel="stylesheet" href="/shop/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🛒 我的商城</div>
+        <div class="nav-links">
+            <a href="/shop">首页</a>
+            <a href="/shop/orders.html">我的订单</a>
+            <a href="/shop/wallet.html">我的钱包</a>
+            <a href="/shop/profile.html">个人中心</a>
+        </div>
+        <div class="nav-user" id="navUser">
+            <span id="userName">未登录</span>
+            <a href="/shop/login.html" id="loginBtn">登录</a>
+            <a href="javascript:void(0)" id="logoutBtn" style="display:none" onclick="logout()">退出</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="product-detail" id="productDetail">
+            <div class="loading">加载中...</div>
+        </div>
+
+        <div class="product-actions" id="productActions" style="display:none">
+            <div class="quantity-selector">
+                <label>数量：</label>
+                <button onclick="changeQuantity(-1)">-</button>
+                <input type="number" id="quantity" value="1" min="1" onchange="updateTotal()">
+                <button onclick="changeQuantity(1)">+</button>
+                <span id="stockInfo"></span>
+            </div>
+            <div class="total-price">
+                总价：<span id="totalPrice">¥0.00</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-primary btn-large" onclick="buyNow()">立即购买</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderModal()">&times;</span>
+            <h3>确认订单</h3>
+            <div id="orderPreview"></div>
+            <div class="form-group">
+                <label for="orderAddress">收货地址</label>
+                <textarea id="orderAddress" rows="3" placeholder="请输入收货地址"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="orderRemark">备注</label>
+                <input type="text" id="orderRemark" placeholder="选填">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeOrderModal()">取消</button>
+                <button class="btn-primary" onclick="confirmOrder()">确认下单</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/shop/js/api.js"></script>
+    <script src="/shop/js/utils.js"></script>
+    <script src="/shop/js/auth.js"></script>
+    <script src="/shop/js/shop.js"></script>
+    <script>
+        checkAuth();
+        loadProductDetail();
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的钱包</title>
+    <link rel="stylesheet" href="/shop/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🛒 我的商城</div>
+        <div class="nav-links">
+            <a href="/shop">首页</a>
+            <a href="/shop/orders.html">我的订单</a>
+            <a href="/shop/wallet.html" class="active">我的钱包</a>
+            <a href="/shop/profile.html">个人中心</a>
+        </div>
+        <div class="nav-user" id="navUser">
+            <span id="userName">未登录</span>
+            <a href="/shop/login.html" id="loginBtn">登录</a>
+            <a href="javascript:void(0)" id="logoutBtn" style="display:none" onclick="logout()">退出</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="wallet-overview">
+            <div class="balance-card">
+                <div class="balance-label">账户余额</div>
+                <div class="balance-amount" id="balanceAmount">¥0.00</div>
+            </div>
+            <div class="balance-actions">
+                <button class="btn-primary" onclick="showRechargeModal()">充值</button>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>交易记录</h2>
+        </div>
+
+        <div class="transaction-tabs">
+            <button class="tab-btn active" onclick="filterTransactions('')">全部</button>
+            <button class="tab-btn" onclick="filterTransactions('recharge')">充值</button>
+            <button class="tab-btn" onclick="filterTransactions('payment')">消费</button>
+            <button class="tab-btn" onclick="filterTransactions('refund')">退款</button>
+        </div>
+
+        <div class="transactions-list" id="transactionsList">
+            <div class="loading">加载中...</div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <div id="rechargeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRechargeModal()">&times;</span>
+            <h3>账户充值</h3>
+            <div class="recharge-options">
+                <div class="recharge-amounts">
+                    <button class="amount-btn" onclick="selectAmount(100)">¥100</button>
+                    <button class="amount-btn" onclick="selectAmount(200)">¥200</button>
+                    <button class="amount-btn" onclick="selectAmount(500)">¥500</button>
+                    <button class="amount-btn" onclick="selectAmount(1000)">¥1000</button>
+                </div>
+                <div class="form-group">
+                    <label for="customAmount">自定义金额</label>
+                    <input type="number" id="customAmount" placeholder="请输入充值金额" min="1">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeRechargeModal()">取消</button>
+                <button class="btn-primary" onclick="confirmRecharge()">确认充值</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/shop/js/api.js"></script>
+    <script src="/shop/js/utils.js"></script>
+    <script src="/shop/js/auth.js"></script>
+    <script src="/shop/js/shop.js"></script>
+    <script>
+        checkAuth(true);
+        loadWallet();
+        loadTransactions();
+    </script>
+</body>
+</html>

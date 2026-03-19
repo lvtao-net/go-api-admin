@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员注册</title>
+    <link rel="stylesheet" href="/shop/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🛒 我的商城</div>
+        <div class="nav-links">
+            <a href="/shop">首页</a>
+        </div>
+    </nav>
+
+    <main class="container auth-container">
+        <div class="auth-box">
+            <h2>会员注册</h2>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="identity">邮箱/手机号</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="identity" name="identity" required placeholder="请输入邮箱或手机号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="code">验证码</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="code" name="code" placeholder="请输入验证码">
+                        <button type="button" id="sendCodeBtn" onclick="sendRegisterCode()">发送验证码</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" required placeholder="请输入密码（至少6位）">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请再次输入密码">
+                </div>
+                <div class="form-group">
+                    <label for="nickname">昵称</label>
+                    <input type="text" id="nickname" name="nickname" placeholder="请输入昵称（选填）">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">注册</button>
+                </div>
+                <div class="form-links">
+                    <a href="/shop/login.html">已有账号？去登录</a>
+                </div>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </main>
+
+    <script src="/shop/js/api.js"></script>
+    <script src="/shop/js/utils.js"></script>
+    <script src="/shop/js/auth.js"></script>
+    <script>
+        // 如果已登录，跳转到首页
+        if (localStorage.getItem('token')) {
+            window.location.href = '/shop';
+        }
+    </script>
+</body>
+</html>
