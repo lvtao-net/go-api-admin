@@ -100,14 +100,31 @@ jobs:
 
       - name: Create archive
         run: |
-          cd build
           ARCHIVE_NAME=go-gin-api-admin-${{ matrix.goos }}-${{ matrix.goarch }}
           
+          # 创建打包目录
+          mkdir -p package
+          
+          # 复制二进制文件
           if [ "${{ matrix.goos }}" = "windows" ]; then
-            zip -r ../${ARCHIVE_NAME}.zip go-gin-api-admin.exe
+            cp build/go-gin-api-admin.exe package/
           else
-            tar -czf ../${ARCHIVE_NAME}.tar.gz go-gin-api-admin
+            cp build/go-gin-api-admin package/
           fi
+          
+          # 复制配置文件和文档
+          cp config.yaml.example package/config.yaml.example
+          cp README.md package/
+          
+          # 创建压缩包
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            cd package && zip -r ../${ARCHIVE_NAME}.zip *
+          else
+            cd package && tar -czf ../${ARCHIVE_NAME}.tar.gz *
+          fi
+          
+          # 清理
+          rm -rf package
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -138,8 +155,6 @@ jobs:
         run: |
           mkdir -p release-assets
           find artifacts -type f \( -name "*.tar.gz" -o -name "*.zip" \) -exec cp {} release-assets/ \;
-          cp config.yaml.example release-assets/
-          cp README.md release-assets/
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -157,6 +172,11 @@ jobs:
             - **macOS amd64**: `go-gin-api-admin-darwin-amd64.tar.gz`
             - **macOS arm64 (Apple Silicon)**: `go-gin-api-admin-darwin-arm64.tar.gz`
             - **Windows amd64**: `go-gin-api-admin-windows-amd64.zip`
+            
+            压缩包内已包含：
+            - 可执行文件
+            - 配置文件示例 (`config.yaml.example`)
+            - 说明文档 (`README.md`)
             
             ### 使用方法
             
