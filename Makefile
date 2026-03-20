@@ -15,7 +15,8 @@ GOCLEAN := go clean
 GOTEST := go test
 GOMOD := go mod
 
-# 版本信息
+# 版本信息（从 git tag 获取，如果没有则使用默认值）
+VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo "1.0.0")
 LDFLAGS := -ldflags "-X main.Version=$(VERSION) -s -w"
 
 all: clean deps build-local
@@ -107,18 +108,38 @@ frontend-init:
 test:
 	$(GOTEST) -v ./...
 
-# 打包发布
+# 打包发布（创建压缩包）
 release: deps build
-	@echo "Building release package..."
+	@echo "Creating release packages..."
 	@mkdir -p $(BUILD_DIR)/release
-	@cp $(BUILD_DIR)/$(APP_NAME)-darwin-amd64 $(BUILD_DIR)/release/
-	@cp $(BUILD_DIR)/$(APP_NAME)-darwin-arm64 $(BUILD_DIR)/release/
-	@cp $(BUILD_DIR)/$(APP_NAME)-linux-amd64 $(BUILD_DIR)/release/
-	@cp $(BUILD_DIR)/$(APP_NAME)-linux-arm64 $(BUILD_DIR)/release/
-	@cp $(BUILD_DIR)/$(APP_NAME)-windows-amd64.exe $(BUILD_DIR)/release/
-	@cp config.yaml.example $(BUILD_DIR)/release/config.yaml.example
+	@echo "Creating darwin-amd64 archive..."
+	@cd $(BUILD_DIR) && tar -czf release/$(APP_NAME)-darwin-amd64.tar.gz $(APP_NAME)-darwin-amd64
+	@echo "Creating darwin-arm64 archive..."
+	@cd $(BUILD_DIR) && tar -czf release/$(APP_NAME)-darwin-arm64.tar.gz $(APP_NAME)-darwin-arm64
+	@echo "Creating linux-amd64 archive..."
+	@cd $(BUILD_DIR) && tar -czf release/$(APP_NAME)-linux-amd64.tar.gz $(APP_NAME)-linux-amd64
+	@echo "Creating linux-arm64 archive..."
+	@cd $(BUILD_DIR) && tar -czf release/$(APP_NAME)-linux-arm64.tar.gz $(APP_NAME)-linux-arm64
+	@echo "Creating windows-amd64 archive..."
+	@cd $(BUILD_DIR) && zip -q release/$(APP_NAME)-windows-amd64.zip $(APP_NAME)-windows-amd64.exe
+	@cp config.yaml.example $(BUILD_DIR)/release/
 	@cp README.md $(BUILD_DIR)/release/ 2>/dev/null || true
-	@echo "Release package ready in $(BUILD_DIR)/release/"
+	@echo "=========================================="
+	@echo "Release packages ready in $(BUILD_DIR)/release/"
+	@echo "=========================================="
+	@ls -lh $(BUILD_DIR)/release/
+
+# 创建 git tag 并推送
+tag:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "Usage: make tag VERSION=v1.0.0"; \
+		exit 1; \
+	fi
+	@echo "Creating tag $(VERSION)..."
+	@git tag -a $(VERSION) -m "Release $(VERSION)"
+	@git push origin $(VERSION)
+	@echo "Tag $(VERSION) created and pushed!"
+	@echo "GitHub Actions will automatically build and create a release."
 
 # 开发环境设置
 dev-setup: deps frontend-init
@@ -140,6 +161,10 @@ docker-run:
 	@echo "Running Docker container..."
 	docker run -p 8099:8099 $(APP_NAME):$(VERSION)
 
+# 显示版本信息
+version:
+	@echo "Version: $(VERSION)"
+
 # 帮助
 help:
 	@echo "可用命令:"
@@ -152,5 +177,7 @@ help:
 	@echo "  make frontend-dev  - 前端开发服务器"
 	@echo "  make frontend-build- 构建前端"
 	@echo "  make test          - 运行测试"
-	@echo "  make release       - 打包发布"
+	@echo "  make release       - 打包发布（创建压缩包）"
+	@echo "  make tag VERSION=v1.0.0 - 创建并推送 git tag"
 	@echo "  make dev-setup     - 初始化开发环境"
+	@echo "  make version       - 显示当前版本"
