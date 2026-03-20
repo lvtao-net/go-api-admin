@@ -73,6 +73,11 @@ jobs:
           name: frontend-build
           path: internal/embed/dist
 
+      - name: Download Go dependencies
+        run: |
+          go mod download
+          go mod tidy
+
       - name: Get version
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
