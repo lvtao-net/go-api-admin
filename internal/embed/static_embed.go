@@ -16,28 +16,19 @@ import (
 //go:embed all:dist
 var staticFS embed.FS
 
-func init() {
-	// 标记已嵌入文件
-	setEmbedded()
-}
-
-var embedded = false
-
-func setEmbedded() {
-	embedded = true
-}
-
+// hasEmbeddedFiles 检查是否有嵌入的文件
 func hasEmbeddedFiles() bool {
-	return embedded
+	return true
 }
 
+// getEmbeddedFS 获取嵌入的文件系统
 func getEmbeddedFS() http.FileSystem {
 	fsys, _ := fs.Sub(staticFS, "dist")
 	return http.FS(fsys)
 }
 
-// serveEmbedded 使用嵌入的文件服务
-func serveEmbedded(r *gin.Engine) {
+// ServeStatic 配置静态文件服务和 SPA 路由
+func ServeStatic(r *gin.Engine, useEmbed bool) {
 	distFS, _ := fs.Sub(staticFS, "dist")
 
 	// 静态资源服务
@@ -46,6 +37,15 @@ func serveEmbedded(r *gin.Engine) {
 	// SPA 路由 fallback
 	r.NoRoute(func(c *gin.Context) {
 		path := c.Request.URL.Path
+
+		// 如果是 API 路由，返回 404 JSON 响应
+		if strings.HasPrefix(path, "/api/") {
+			c.JSON(http.StatusNotFound, gin.H{
+				"code":    404,
+				"message": "API endpoint not found",
+			})
+			return
+		}
 
 		// 检查是否是静态资源
 		staticExts := []string{".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".woff", ".woff2", ".ttf", ".eot", ".map"}
